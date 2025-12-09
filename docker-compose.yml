@@ -1,15 +1,62 @@
-version: "3.8"
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: reservations
-    ports:
-      - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
+  version: "3.8"
 
-volumes:
-  db-data:
+  services:
+    db:
+      image: postgres:15
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: reservations
+      ports:
+        - "5432:5432"
+      volumes:
+        - db-data:/var/lib/postgresql/data
+
+    backend:
+      build: ./backend
+      container_name: reservations_backend
+      restart: always
+      depends_on:
+        - db
+      environment:
+        DATABASE_URL: "postgresql://postgres:postgres@db:5432/reservations?schema=public"
+        JWT_SECRET: "supersecret"
+      ports:
+        - "4000:4000"
+      volumes:
+        - ./backend:/app
+        - /app/node_modules
+      command: npm run dev
+
+    frontend:
+      build: ./frontend
+      container_name: reservations_frontend
+      restart: always
+      depends_on:
+        - backend
+      environment:
+        VITE_API_URL: "http://localhost:4000/api"
+      ports:
+        - "5173:5173"
+      volumes:
+        - ./frontend:/app
+        - /app/node_modules
+      command: npm run dev
+
+    pgadmin:
+      image: dpage/pgadmin4:latest
+      container_name: reservations_pgadmin
+      restart: always
+      depends_on:
+        - db
+      environment:
+        PGADMIN_DEFAULT_EMAIL: admin@admin.com
+        PGADMIN_DEFAULT_PASSWORD: admin
+      ports:
+        - "5050:80"
+      volumes:
+        - pgadmin-data:/var/lib/pgadmin
+
+  volumes:
+    db-data:
+    pgadmin-data:

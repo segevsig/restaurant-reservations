@@ -33,7 +33,7 @@ router.get("/", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const reservations = await prisma.reservation.findMany({
       where: { userId: req.userId! },
-      include: { table: true }, // optional: fetch table info
+      include: { table: true }, 
     });
 
     res.json({ reservations });
