@@ -23,6 +23,10 @@ export async function login(data: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw new Error(body?.error || `HTTP ${res.status}`);
+  }
+    return body;
 
-  return res.json();
 }
