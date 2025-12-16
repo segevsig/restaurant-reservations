@@ -5,6 +5,9 @@ import cors from "cors";
 import prisma from "./prisma";
 import authRoutes from "./routes/auth";
 import reservationRoutes from "./routes/reservation";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger";
+
 
 
 
@@ -13,6 +16,8 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/reservations", reservationRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 
 

@@ -3,9 +3,11 @@ FROM node:20
 
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies (use npm ci for faster, reproducible builds)
+# Use BuildKit cache mount for faster subsequent builds
 COPY package*.json ./
-RUN npm install
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
 # Copy Prisma schema
 COPY prisma ./prisma
