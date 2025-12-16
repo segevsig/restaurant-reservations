@@ -6,22 +6,42 @@ import './App.css'
 function App() {
   return (
     <BrowserRouter>
-    <Link to="/login">login</Link>
-      <nav style={{ padding: '20px', borderBottom: '1px solid #ccc' }}>
-        <Link to="/" style={{ marginRight: '20px' }}>Home</Link>
-        <Link to="/register">Register</Link>
-      </nav>
-      <Routes>
-        <Route path="/" element={
-          <div style={{ padding: '20px' }}>
-            <h1>Restaurant Reservations</h1>
-            <p>Welcome to the restaurant reservation system</p>
-            <Link to="/register">Go to Register</Link>
+      <div className="app-container">
+        <nav>
+          <div>
+            <Link to="/" className="nav-logo">
+              🍽️ Restaurant Reservations
+            </Link>
           </div>
-        } />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+          <div className="nav-links">
+            <Link to="/">Home</Link>
+            <Link to="/register">Register</Link>
+            <Link to="/login">Login</Link>
+          </div>
+        </nav>
+        <Routes>
+          <Route path="/" element={
+            <div className="page-container">
+              <div className="home-container">
+                <h1>Restaurant Reservations</h1>
+                <p>Welcome to the restaurant reservation system. Book your table with ease!</p>
+                <div className="home-actions">
+                  <Link to="/register">
+                    <button>Get Started</button>
+                  </Link>
+                  <Link to="/login">
+                    <button className="button-outline">
+                      Login
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          } />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   )
 }
