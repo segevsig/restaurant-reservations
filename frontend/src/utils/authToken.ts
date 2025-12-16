@@ -1,10 +1,18 @@
 const TOKEN_KEY = "auth_token";
+const USER_KEY = "user_info";
 
 type StoredToken = {
   token: string;
   // optional: store when it was saved (or an expiry time)
   savedAt: number;
   expiresAt?: number; // unix ms
+};
+
+type UserInfo = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
 };
 
 export function saveToken(token: string, opts?: { ttlMs?: number }) {
@@ -15,6 +23,22 @@ export function saveToken(token: string, opts?: { ttlMs?: number }) {
   };
 
   localStorage.setItem(TOKEN_KEY, JSON.stringify(payload));
+}
+
+export function saveUser(user: UserInfo) {
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+}
+
+export function getUser(): UserInfo | null {
+  const raw = localStorage.getItem(USER_KEY);
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as UserInfo;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 export function getToken(): string | null {
@@ -47,6 +71,7 @@ export function hasToken(): boolean {
 
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
 }
 
 

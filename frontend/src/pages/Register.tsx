@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { register } from "../services/auth";
+import { saveToken, saveUser } from "../utils/authToken";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
@@ -21,8 +22,10 @@ export default function Register() {
 
     try {
       const res = await register({ email, password, name });
-      if (res.token) {
-        navigate("/login");
+      if (res.token && res.user) {
+        saveToken(res.token);
+        saveUser(res.user);
+        navigate("/dashboard");
       }
     } catch (err: any) {
       setError(err.message || "Registration failed");

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../services/auth";
-import { saveToken } from "../utils/authToken.ts";
+import { saveToken, saveUser } from "../utils/authToken.ts";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -21,9 +21,10 @@ export default function LoginPage() {
 
     try {
       const res = await login({ email: email.trim().toLowerCase(), password });
-      if (res.token) {
+      if (res.token && res.user) {
         saveToken(res.token);
-        navigate("/");
+        saveUser(res.user);
+        navigate("/dashboard");
       }
     } catch (e: any) {
       setErrorMsg(e.message || "Login failed");
